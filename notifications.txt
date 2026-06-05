@@ -1,0 +1,2 @@
+2026-06-05 10:38:21 | Aayush Shah | Account created successfully.
+2026-06-05 10:38:49 | Aayush Shah | Deposit completed: 500.0
