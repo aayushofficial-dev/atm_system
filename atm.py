@@ -484,7 +484,7 @@ def admin_menu(users):
 
     while True:
 
-        print("\n=== Admin ===")
+        print("\nWelcome to the Admin Panel!")
         print("1. View Users")
         print("2. View Transactions")
         print("3. Suspend User")
@@ -592,7 +592,7 @@ def main():
 
     while True:
 
-        print("\n=== ATM ===")
+        print("\nWelcome to the ATM System!")
         print("1. Create Account")
         print("2. Login")
         print("3. Reset Password")
