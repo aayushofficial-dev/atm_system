@@ -1,0 +1,6 @@
+body { font-family: Arial, sans-serif; background:#f4f4f4; }
+.container { max-width:600px; margin:40px auto; background:#fff; padding:20px; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+label { display:block; margin-top:10px; }
+input { width:100%; padding:8px; margin-top:4px; }
+button { margin-top:10px; padding:8px 12px; }
+.messages { color: red; }
