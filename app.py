@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 import backend
 
 app = Flask(__name__)
@@ -33,8 +33,15 @@ def deposit():
     user = session.get('user')
     if not user:
         return redirect(url_for('login'))
-    amount = float(request.form.get('amount', 0))
+    # support both form and AJAX (JSON)
+    try:
+        amount = float(request.form.get('amount', request.json.get('amount', 0)))
+    except Exception:
+        amount = 0
     ok, msg = backend.deposit(user, amount)
+    if request.is_json:
+        balance = backend.get_balance(user)
+        return jsonify(success=ok, message=msg, balance=balance)
     flash(msg)
     return redirect(url_for('dashboard'))
 
@@ -44,10 +51,39 @@ def withdraw():
     user = session.get('user')
     if not user:
         return redirect(url_for('login'))
-    amount = float(request.form.get('amount', 0))
+    try:
+        amount = float(request.form.get('amount', request.json.get('amount', 0)))
+    except Exception:
+        amount = 0
     ok, msg = backend.withdraw(user, amount)
+    if request.is_json:
+        balance = backend.get_balance(user)
+        return jsonify(success=ok, message=msg, balance=balance)
     flash(msg)
     return redirect(url_for('dashboard'))
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        recovery = request.form.get('recovery')
+        ok, msg = backend.create_account(username, password, recovery)
+        if ok:
+            flash(msg)
+            return redirect(url_for('login'))
+        flash(msg)
+    return render_template('register.html')
+
+
+@app.route('/api/transactions')
+def api_transactions():
+    user = session.get('user')
+    if not user:
+        return jsonify(success=False, message='Not logged in'), 401
+    tx = backend.get_transactions(user)
+    return jsonify(success=True, transactions=tx)
 
 
 @app.route('/logout')
